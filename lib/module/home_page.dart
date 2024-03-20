@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
+import 'package:weather/module/home_controller.dart';
+import 'package:weather/widgets/weather_items.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  final HomeController _controller = Get.find<HomeController>();
 
   String formatDate(DateTime date) {
     final DateFormat formatter = DateFormat('EEEE d MMMM y');
@@ -16,6 +20,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           backgroundColor: Colors.transparent,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
           elevation: 0,
@@ -40,18 +45,25 @@ class HomePage extends StatelessWidget {
         ),
         body: SizedBox.expand(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: Card(
-                  child: Column(
-                    children: [
-                      Lottie.asset('assets/loc.json',
-                          height: 90, fit: BoxFit.cover)
-                    ],
-                  ),
-                ),
-              )
+              WhetherItem(
+                icon: 'assets/loc.json',
+                text: "Your location is ",
+                subText: _controller.address,
+              ),
+              const SizedBox(height: 18),
+              WhetherItem(
+                icon: 'assets/temp.json',
+                text: "The temperature is ",
+                subText: "${_controller.temperature}°C",
+              ),
+              const SizedBox(height: 18),
+              WhetherItem(
+                icon: 'assets/thums_up.json',
+                text: "You should ",
+                subText: _controller.infoText.value,
+              ),
             ],
           ),
         ));
