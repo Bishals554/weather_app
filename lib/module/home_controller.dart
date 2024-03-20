@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:weather/data/location_data.dart';
 import 'package:weather/data/waether_data.dart';
 import 'package:weather/repository/weather_repository.dart';
@@ -12,6 +13,7 @@ class HomeController extends GetxController {
   Rxn<WeatherData> weatherData = Rxn();
 
   RxString infoText = '...'.obs;
+  RxBool isLoading = false.obs;
 
   String get address =>
       "${locationData.value?.regionName}, ${locationData.value?.country}";
@@ -26,7 +28,9 @@ class HomeController extends GetxController {
   }
 
   Future<void> getCurrentLocation() async {
+    isLoading.value = true;
     final LocationData? location = await _repository.getCurrentLocation();
+    isLoading.value = false;
     log("${location?.regionName}");
     locationData.value = location;
   }
